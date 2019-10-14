@@ -1,4 +1,4 @@
-#ifndef LINK_LIST    //��ͷ���� 
+#ifndef LINK_LIST    //有头链表 
 #define LINK_LIST
 #include "Node.h"
 #include<iostream>
@@ -10,16 +10,16 @@ public:
 	LinkList();
 	LinkList(const ElemType *elems,int n);	
 	~LinkList();
-	LinkList(const LinkList &other);   //���
-	LinkList & operator=(const LinkList &other); //�ֵ
+	LinkList(const LinkList &other);   //深拷贝
+	LinkList & operator=(const LinkList &other); //深赋值
 	void Clear();
 	void Traverse(void (*visit)(const ElemType &e)) const;
 	int GetLength() const;
-	int InsertElem(const ElemType &e);  //����״̬
-	int InsertElem(int i,const ElemType &e);  //����״̬
-	int DeleteElem(int i,ElemType &e);   //����״̬
-	int LocateElem(const ElemType &e) const;   //����Ԫ������λ��
-	int GetElem(int i,ElemType &e) const;   //����״̬,ȡ��Ԫ�ط���e��
+	int InsertElem(const ElemType &e);  //返回状态
+	int InsertElem(int i,const ElemType &e);  //返回状态
+	int DeleteElem(int i,ElemType &e);   //返回状态
+	int LocateElem(const ElemType &e) const;   //返回元素所在位置
+	int GetElem(int i,ElemType &e) const;   //返回状态,取得元素放在e内
 	int SetElem(int i,const ElemType &e);
 
 protected:
@@ -35,6 +35,7 @@ LinkList<ElemType>::LinkList()
 	length=0;
 }
 
+//用一堆node数组来初始化list
 template <typename ElemType>
 LinkList<ElemType>::LinkList(const ElemType *elems,int n)
 {
@@ -68,6 +69,8 @@ LinkList<ElemType>::~LinkList()
 	delete head;
 }
 
+
+//用其他链表初始化数据
 template <typename ElemType>
 LinkList<ElemType>::LinkList(const LinkList &other)
 {
@@ -82,6 +85,7 @@ LinkList<ElemType>::LinkList(const LinkList &other)
 	}
 }
 
+//链表比较
 template <typename ElemType>
 LinkList<ElemType> & LinkList<ElemType>::operator=(const LinkList<ElemType> &other)
 {
@@ -114,10 +118,12 @@ int LinkList<ElemType>::GetLength() const
 	return length;
 }
 
+//插入到当前结点尾部
 template <typename ElemType>
 int LinkList<ElemType>::InsertElem(const ElemType &e)
 {
 	Node<ElemType> *p=head;
+	//低效，每次都要从头结点找到当前尾结点
 	while(p->next)
 	{
 		p=p->next;
@@ -127,6 +133,7 @@ int LinkList<ElemType>::InsertElem(const ElemType &e)
 	return 1;
 }
 
+//插入到指定位置
 template <typename ElemType>
 int LinkList<ElemType>::InsertElem(int i,const ElemType &e)
 {
@@ -136,7 +143,7 @@ int LinkList<ElemType>::InsertElem(int i,const ElemType &e)
 	  Node<ElemType> *p=head,*q;
 	  for(int count=1;count<i;count++)
 		 p=p->next;
-	  q=new Node<ElemType>(e,p->next);
+	  q=new Node<ElemType>(e,p->next);//直接一步初始化结点 带着下一步的指针域
 	  p->next=q;
 	  length++;
 	  return 1;
